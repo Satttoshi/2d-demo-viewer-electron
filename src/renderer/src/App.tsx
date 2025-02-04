@@ -1,7 +1,8 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
+import React from "react";
 
-function App(): JSX.Element {
+function App(): React.ReactElement {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
   return (

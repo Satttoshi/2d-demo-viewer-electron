@@ -9,7 +9,7 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
-    "baseUrl": "../../Neuer Ordner (2)/quick-start/packages/create-electron/playground/react-ts",
+    "baseUrl": ".",
     "paths": {
       "@renderer/*": [
         "src/renderer/src/*"
