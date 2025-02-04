@@ -1,13 +1,16 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { getDemoPath, getParsedDemoPath } from './utils/file-paths';
+import { parse } from './parser/demo-parser';
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    title: "2D Demo Viewer",
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -18,7 +21,11 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow.show();
+    // open Dev Tools if running in development
+    if (is.dev) {
+      mainWindow.webContents.openDevTools();
+    }
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -51,6 +58,14 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.on('parse-demo', async (_) => {
+    const demoPath = getDemoPath('ancient.dem')
+    const outputPath = getParsedDemoPath(path.basename(demoPath, '.dem'))
+    console.log('Demo path:', demoPath)
+    console.log('Output path:', outputPath)
+    parse(demoPath);
+  })
 
   createWindow()
 
