@@ -5,6 +5,7 @@ function App(): React.ReactElement {
 
   return (
     <>
+      <h1 className="text-red-500">HELLO WORLD</h1>
         <div>
           <button onClick={ipcHandle}>
             Send IPC
