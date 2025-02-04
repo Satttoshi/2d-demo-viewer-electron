@@ -10,8 +10,8 @@ export async function parse(demoPath: string) {
   const roundEnds = parseEvent(demoPath, 'round_end');
 
   const rounds = await parseRounds(demoPath, roundStarts, roundEnds);
+
   console.log("Parsed rounds:", rounds);
 
-  console.log(parseTicks(demoPath, ["inventory"], [0]));
-  console.log("Parsed rounds:", rounds);
+  console.log(parseTicks(demoPath, ["X", "Y", "inventory","active_weapon" , "start_balance", "cash_spent_this_round", "health", "is_alive"], [14000]));
 }
