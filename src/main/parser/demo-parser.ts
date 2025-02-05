@@ -1,4 +1,4 @@
-import { parseEvent, parseHeader } from '@laihoe/demoparser2';
+import { parseEvent, parseHeader, parseTicks } from '@laihoe/demoparser2';
 import { parseRoundData, parseRounds } from './parse-rounds';
 import { createJsonFile } from '../utils/file-paths';
 
@@ -14,8 +14,12 @@ export async function parse(demoPath: string) {
 
   console.log('Parsed rounds:', rounds);
 
-  const firstRound = rounds[0];
-  const firstRoundData = await parseRoundData(demoPath, firstRound);
+  const round = rounds[5];
+  const firstRoundData = await parseRoundData(demoPath, round);
+
+  const test = parseTicks(demoPath, ['flash_duration'], [25000]);
+
+  console.log('Test:', test);
 
   try {
     const filePath = await createJsonFile('parsed_demo', firstRoundData);

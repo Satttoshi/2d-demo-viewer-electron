@@ -114,6 +114,7 @@ export async function parseRoundData(
       'is_alive',
       'FIRE',
       'team_num',
+      'flash_duration',
     ],
     ticks,
   );
@@ -153,6 +154,7 @@ function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
       yaw: player.yaw,
       is_alive: player.is_alive,
       FIRE: player.FIRE,
+      flash_duration: player.flash_duration !== 0 ? player.flash_duration : undefined,
     });
 
     const transformNade = (nade: NadeState) => ({

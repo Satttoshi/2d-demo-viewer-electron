@@ -35,6 +35,7 @@ export type PlayerState = {
   yaw: number;
   is_alive: boolean;
   FIRE: boolean;
+  flash_duration?: number;
 };
 
 export type NadeState = {
