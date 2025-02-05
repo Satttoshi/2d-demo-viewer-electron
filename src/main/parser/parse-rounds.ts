@@ -6,7 +6,7 @@ import {
   RoundEnd,
   RoundStart,
   TickState,
-} from '../types/demo-types';
+} from '../../types/demo-types';
 import _ from 'lodash';
 
 function isKnifeRound(inventories: PlayerInventory[]): boolean {
