@@ -4,7 +4,8 @@ import { useStageZoom } from '../hooks/useStageZoom';
 import demoData from '../mocks/parsed_demo.json';
 import { useTick } from '../hooks/useTick';
 import { PlaybackControls } from './PlaybackControls';
-import { Player } from './konva/PlayerDot';
+import { Player } from './konva/Player';
+import { Grenade } from './konva/Grenade';
 
 export const DemoStage = () => {
   const { stageProps } = useStageZoom({
@@ -37,6 +38,9 @@ export const DemoStage = () => {
           ))}
           {currentTickData?.teamB.map(player => (
             <Player key={player.name} player={player} isTeamA={false} />
+          ))}
+          {currentTickData?.nadeEvents?.map(nade => (
+            <Grenade key={`${nade.name}-${nade.grenade_type}-${nade.x}-${nade.y}`} nade={nade} />
           ))}
         </Layer>
       </Stage>
