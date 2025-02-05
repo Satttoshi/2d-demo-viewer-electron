@@ -31,7 +31,7 @@ export const DemoStage = () => {
     <>
       <Stage width={2000} height={2000} {...stageProps}>
         <Layer>
-          <KonvaImage src="./src/assets/maps/ancient.jpg" width={2000} height={2000} />
+          <KonvaImage src="./src/assets/maps/ancient.jpg" />
 
           {currentTickData?.teamA.map(player => (
             <Player key={player.name} player={player} isTeamA={true} />

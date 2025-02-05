@@ -35,6 +35,7 @@ export type PlayerState = {
   yaw: number;
   is_alive: boolean;
   FIRE: boolean;
+  active_weapon_name: string;
   flash_duration?: number;
 };
 

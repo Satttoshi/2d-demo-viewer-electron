@@ -1,4 +1,4 @@
-import { Circle, Text, Line } from 'react-konva';
+import { Circle, Text, Line, Group, Shape } from 'react-konva';
 import { PlayerState } from '../../../../types/demo-types';
 import { transformCoordinates } from '../../utils/transform-coordinates';
 import { useFlashOpacity } from '../../hooks/useFlashOpacity';
@@ -20,36 +20,82 @@ export const Player = ({ player, isTeamA, mapWidth = 2000, mapHeight = 2000 }: P
   const directionY = y - Math.sin(yawRadians) * directionLength;
 
   const flashOpacity = useFlashOpacity({ flash_duration: player.flash_duration });
-  const { fireStartX, fireStartY, fireEndX, fireEndY, opacity } = useFireAnimation(
+  const { fireStartX, fireStartY, fireEndX, fireEndY, opacity, shouldShow } = useFireAnimation(
+    player.active_weapon_name,
     player.FIRE,
     directionX,
     directionY,
     yawRadians,
   );
 
-  const getPlayerColor = () => {
+  const getPlayerColors = () => {
     if (!player.is_alive) {
-      return '#808080';
+      return {
+        fill: '#808080',
+        background: '#404040',
+      };
     }
-    return isTeamA ? '#66a0ff' : '#ff8a5e';
+    return {
+      fill: isTeamA ? '#66a0ff' : '#ff8a5e',
+      background: isTeamA ? '#32467c' : '#8a4538',
+    };
   };
+
+  const radius = 15;
+
+  // Calculate the fill height based on health percentage
+  const healthPercentage = Math.max(0, Math.min(100, player.health)) / 100;
+  const fillHeight = radius * 2 * healthPercentage;
+  const fillStartY = y + radius - fillHeight;
 
   return (
     <>
+      {/* Background circle with team tint */}
       <Circle
-        key={player.name}
         x={x}
         y={y}
-        radius={15}
-        fill={getPlayerColor()}
-        stroke="#000"
-        strokeWidth={2}
+        radius={radius}
+        fill={getPlayerColors().background}
         opacity={player.is_alive ? 1 : 0.3}
       />
+
+      {/* HP Fill using custom shape */}
+      <Group
+        clipFunc={ctx => {
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+          ctx.closePath();
+        }}
+      >
+        <Shape
+          sceneFunc={(context, shape) => {
+            context.beginPath();
+            context.rect(x - radius, fillStartY, radius * 2, fillHeight);
+            context.closePath();
+            context.fillStrokeShape(shape);
+          }}
+          fill={getPlayerColors().fill}
+          opacity={player.is_alive ? 1 : 0.3}
+        />
+      </Group>
+
+      {/* Foreground circle stroke */}
+      <Circle
+        x={x}
+        y={y}
+        stroke="#000"
+        strokeWidth={2}
+        radius={radius}
+        opacity={player.is_alive ? 1 : 0.3}
+      />
+
+      {/* Aim Direction Indicator */}
       {player.is_alive && (
         <Line points={[x, y, directionX, directionY]} stroke={'#000'} strokeWidth={3} />
       )}
-      {player.is_alive && player.FIRE && (
+
+      {/* Fire Animation */}
+      {player.is_alive && shouldShow && (
         <Line
           points={[fireStartX, fireStartY, fireEndX, fireEndY]}
           stroke="#ff0"
@@ -57,9 +103,13 @@ export const Player = ({ player, isTeamA, mapWidth = 2000, mapHeight = 2000 }: P
           opacity={opacity}
         />
       )}
+
+      {/* Flash Effect */}
       {flashOpacity > 0 && player.is_alive && (
         <Circle x={x} y={y} radius={16} fill="#ffffff" opacity={flashOpacity} />
       )}
+
+      {/* Player Name */}
       <Text
         x={x - 60}
         y={y - 35}

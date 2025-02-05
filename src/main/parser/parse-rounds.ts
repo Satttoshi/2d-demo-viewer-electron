@@ -115,6 +115,7 @@ export async function parseRoundData(
       'FIRE',
       'team_num',
       'flash_duration',
+      'active_weapon_name',
     ],
     ticks,
   );
@@ -154,6 +155,7 @@ function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
       yaw: player.yaw,
       is_alive: player.is_alive,
       FIRE: player.FIRE,
+      active_weapon_name: player.active_weapon_name,
       flash_duration: player.flash_duration !== 0 ? player.flash_duration : undefined,
     });
 
