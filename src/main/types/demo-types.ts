@@ -26,3 +26,28 @@ export type Round = {
   winner: string;
   reason: string;
 };
+
+export type PlayerState = {
+  name: string;
+  x: number;
+  y: number;
+  health: number;
+  yaw: number;
+  is_alive: boolean;
+  FIRE: boolean;
+};
+
+export type NadeState = {
+  grenade_type: string;
+  name: string;
+  x: number;
+  y: number;
+};
+
+export type TickState = {
+  tick: number;
+  game_time: number;
+  teamA: PlayerState[];
+  teamB: PlayerState[];
+  nadeEvents?: NadeState[];
+};

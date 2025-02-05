@@ -1,5 +1,12 @@
-import { parseTicks } from '@laihoe/demoparser2';
-import { PlayerInventory, Round, RoundEnd, RoundStart } from '../types/demo-types';
+import { parseGrenades, parseTicks } from '@laihoe/demoparser2';
+import {
+  NadeState,
+  PlayerInventory,
+  Round,
+  RoundEnd,
+  RoundStart,
+  TickState,
+} from '../types/demo-types';
 import _ from 'lodash';
 
 function isKnifeRound(inventories: PlayerInventory[]): boolean {
@@ -111,36 +118,48 @@ export async function parseRoundData(
     ticks,
   );
 
-  return transformTickData(parsedTicks);
+  // Parse grenades for the round
+  const parsedGrenades = parseGrenades(demoPath).filter(
+    nade => nade.tick >= round.startTick && nade.tick <= round.endTick,
+  );
+
+  return transformTickData(parsedTicks, parsedGrenades);
 }
 
 /**
  * Transforms raw tick data from the demo parser into a structured format grouping players by teams
  *
  * @param {Array} tickData - Array of player states for each tick from the demo parser
+ * @param nadeData
  * @returns {Array} Array of tick states with teamA (CT) and teamB (T) players grouped separately
  */
-function transformTickData(tickData: any[]): Array<any> {
+function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
   // Group all players by tick
   const groupedByTick = _.groupBy(tickData, 'tick');
 
+  // Group nades by tick
+  const groupedNades = _.groupBy(nadeData, 'tick');
+
   // Transform each tick's data
   return _.map(groupedByTick, (players, tick) => {
-    // Get the game time from any player (they all have the same game time)
     const game_time = players[0].game_time;
-
-    // Split players into teamA (team_num: 3) and teamB (team_num: 2)
     const playersByTeam = _.groupBy(players, 'team_num');
 
-    // Transform player data to only include required fields
-    const transformPlayer = (player: any) => ({
+    const transformPlayer = player => ({
       name: player.name,
-      X: player.X,
-      Y: player.Y,
+      x: player.x,
+      y: player.y,
       health: player.health,
       yaw: player.yaw,
       is_alive: player.is_alive,
       FIRE: player.FIRE,
+    });
+
+    const transformNade = (nade: NadeState) => ({
+      grenade_type: nade.grenade_type,
+      name: nade.name,
+      x: nade.x,
+      y: nade.y,
     });
 
     return {
@@ -148,6 +167,7 @@ function transformTickData(tickData: any[]): Array<any> {
       game_time,
       teamA: _.map(playersByTeam['3'] || [], transformPlayer),
       teamB: _.map(playersByTeam['2'] || [], transformPlayer),
+      nadeEvents: groupedNades[tick] ? _.map(groupedNades[tick], transformNade) : undefined,
     };
   });
 }
