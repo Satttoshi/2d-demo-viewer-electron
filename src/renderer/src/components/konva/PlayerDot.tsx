@@ -3,19 +3,14 @@ import { PlayerState } from '../../../../types/demo-types';
 import { transformCoordinates } from '../../utils/transform-coordinates';
 import { useEffect, useState } from 'react';
 
-type PlayerDotProps = {
+type PlayerProps = {
   player: PlayerState;
   isTeamA: boolean;
   mapWidth?: number;
   mapHeight?: number;
 };
 
-export const PlayerDot = ({
-  player,
-  isTeamA,
-  mapWidth = 2000,
-  mapHeight = 2000,
-}: PlayerDotProps) => {
+export const Player = ({ player, isTeamA, mapWidth = 2000, mapHeight = 2000 }: PlayerProps) => {
   const [fireAnimationProgress, setFireAnimationProgress] = useState(0);
   const { x, y } = transformCoordinates({ x: player.x, y: player.y }, mapWidth, mapHeight);
 
