@@ -23,7 +23,9 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@laihoe/demoparser2": "^0.35.0",
-    "lodash": "^4.17.21"
+    "konva": "^9.3.18",
+    "lodash": "^4.17.21",
+    "react-konva": "^19.0.2"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
