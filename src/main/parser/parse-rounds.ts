@@ -147,8 +147,8 @@ function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
 
     const transformPlayer = player => ({
       name: player.name,
-      x: player.x,
-      y: player.y,
+      x: player.X,
+      y: player.Y,
       health: player.health,
       yaw: player.yaw,
       is_alive: player.is_alive,
