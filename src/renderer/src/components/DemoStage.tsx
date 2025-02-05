@@ -1,7 +1,7 @@
 import { Stage, Layer } from 'react-konva';
 import { KonvaImage } from './konva/KonvaImage';
 import { useStageZoom } from '../hooks/useStageZoom';
-import demoData from '../mocks/parsed_demo.json';
+import demoData from '../../../../parsed/parsed_demo.json';
 import { useTick } from '../hooks/useTick';
 import { PlaybackControls } from './PlaybackControls';
 import { Player } from './konva/Player';
@@ -22,7 +22,7 @@ export const DemoStage = () => {
     setSpeed,
   } = useTick({
     maxTick: demoData.length - 1,
-    speed: 2,
+    speed: 1,
   });
 
   const currentTickData = demoData[currentTickIndex];

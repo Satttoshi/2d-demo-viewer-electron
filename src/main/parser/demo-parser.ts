@@ -14,7 +14,7 @@ export async function parse(demoPath: string) {
 
   console.log('Parsed rounds:', rounds);
 
-  const round = rounds[5];
+  const round = rounds[9];
   const firstRoundData = await parseRoundData(demoPath, round);
 
   const test = parseTicks(demoPath, ['flash_duration'], [25000]);
