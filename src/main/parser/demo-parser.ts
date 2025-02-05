@@ -14,10 +14,10 @@ export async function parse(demoPath: string) {
 
   console.log('Parsed rounds:', rounds);
 
-  const round = rounds[9];
+  const round = rounds[15];
   const firstRoundData = await parseRoundData(demoPath, round);
 
-  const test = parseTicks(demoPath, ['flash_duration'], [25000]);
+  const test = parseTicks(demoPath, [], [110166]);
 
   console.log('Test:', test);
 

@@ -21,6 +21,7 @@ export const DemoStage = () => {
     toggle,
     setSpeed,
   } = useTick({
+    // @ts-ignore
     maxTick: demoData.length - 1,
     speed: 1,
   });
@@ -48,6 +49,7 @@ export const DemoStage = () => {
         className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
         currentTickData={currentTickData}
         currentTickIndex={currentTickIndex}
+        // @ts-ignore
         maxTicks={demoData.length - 1}
         isPlaying={isPlaying}
         onTickChange={setTick}
