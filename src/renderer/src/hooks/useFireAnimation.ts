@@ -22,7 +22,7 @@ const excludedWeapons = [
 ];
 
 const isExcludedWeapon = (weaponName: string | null): boolean => {
-  if (!weaponName) return false;
+  if (!weaponName) return true;
 
   // Convert to lowercase
   const normalizedWeaponName = toLower(weaponName);
