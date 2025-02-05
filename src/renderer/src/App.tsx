@@ -1,8 +1,9 @@
-import React from "react";
+import React from 'react';
+import { DemoStage } from './components/DemoStage';
 
-function App(): React.ReactElement {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-  const ipcHandle2 = (): void => window.electron.ipcRenderer.send('parse-demo')
+export function App(): React.ReactElement {
+  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping');
+  const ipcHandle2 = (): void => window.electron.ipcRenderer.send('parse-demo');
 
   return (
     <>
@@ -21,8 +22,7 @@ function App(): React.ReactElement {
           Send IPC
         </button>
       </div>
+      <DemoStage />
     </>
-  )
+  );
 }
-
-export default App

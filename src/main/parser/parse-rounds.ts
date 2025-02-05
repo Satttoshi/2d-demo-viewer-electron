@@ -6,8 +6,9 @@ import {
   RoundEnd,
   RoundStart,
   TickState,
-} from '../types/demo-types';
+} from '../../types/demo-types';
 import _ from 'lodash';
+import { filterStuckGrenades } from './filter-stuck-grenades';
 
 function isKnifeRound(inventories: PlayerInventory[]): boolean {
   // Check if all players only have knives or empty inventories
@@ -114,6 +115,8 @@ export async function parseRoundData(
       'is_alive',
       'FIRE',
       'team_num',
+      'flash_duration',
+      'active_weapon_name',
     ],
     ticks,
   );
@@ -134,14 +137,17 @@ export async function parseRoundData(
  * @returns {Array} Array of tick states with teamA (CT) and teamB (T) players grouped separately
  */
 function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
+  // Filter out stuck HE grenades before grouping
+  const filteredNades = filterStuckGrenades(nadeData);
+
   // Group all players by tick
   const groupedByTick = _.groupBy(tickData, 'tick');
 
   // Group nades by tick
-  const groupedNades = _.groupBy(nadeData, 'tick');
+  const groupedNades = _.groupBy(filteredNades, 'tick');
 
   // Transform each tick's data
-  return _.map(groupedByTick, (players, tick) => {
+  return _.map(groupedByTick, (players, tick): TickState => {
     const game_time = players[0].game_time;
     const playersByTeam = _.groupBy(players, 'team_num');
 
@@ -153,9 +159,11 @@ function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
       yaw: player.yaw,
       is_alive: player.is_alive,
       FIRE: player.FIRE,
+      active_weapon_name: player.active_weapon_name,
+      flash_duration: player.flash_duration !== 0 ? player.flash_duration : undefined,
     });
 
-    const transformNade = (nade: NadeState) => ({
+    const transformNade = (nade: NadeState): NadeState => ({
       grenade_type: nade.grenade_type,
       name: nade.name,
       x: nade.x,
@@ -167,7 +175,7 @@ function transformTickData(tickData: Array<any>, nadeData = []): TickState[] {
       game_time,
       teamA: _.map(playersByTeam['3'] || [], transformPlayer),
       teamB: _.map(playersByTeam['2'] || [], transformPlayer),
-      nadeEvents: groupedNades[tick] ? _.map(groupedNades[tick], transformNade) : undefined,
+      nadeEvents: groupedNades[tick] ? groupedNades[tick].map(transformNade) : undefined,
     };
   });
 }
