@@ -5,6 +5,9 @@ import icon from '../../resources/icon.png?asset';
 import { getBinaryPath, getDemoPath, getParsedDemoPath } from './utils/file-paths';
 import { parse } from './parser/demo-parser';
 
+// Set to true to enable debug mode, which will open e.G., DevTools
+const DEBUG_MODE = false;
+
 // Start Bechilo-go web server
 const serverProc = require('child_process').spawn(
   getBinaryPath('webserver'),
@@ -39,7 +42,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();
     // open Dev Tools if running in development
-    if (is.dev) {
+    if (is.dev && DEBUG_MODE) {
       mainWindow.webContents.openDevTools();
     }
   });
