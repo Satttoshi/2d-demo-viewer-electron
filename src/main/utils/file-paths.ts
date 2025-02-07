@@ -18,6 +18,15 @@ export function getDemoPath(demoName: string): string {
 }
 
 /**
+ * @description Get the path to a binary in the bin directory
+ * @param {string} binaryName - Name of the binary file (e.g., 'webserver')
+ * @returns {string}
+ */
+export function getBinaryPath(binaryName: string): string {
+  return path.join(appPath, 'bin', binaryName);
+}
+
+/**
  * @description Get the output path for parsed demo data
  * @param {string} demoName - Name of the demo file without extension
  * @returns {string}

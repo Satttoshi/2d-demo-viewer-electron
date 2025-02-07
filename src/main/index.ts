@@ -2,8 +2,24 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import path, { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
-import { getDemoPath, getParsedDemoPath } from './utils/file-paths';
+import { getBinaryPath, getDemoPath, getParsedDemoPath } from './utils/file-paths';
 import { parse } from './parser/demo-parser';
+
+// Start Bechilo-go web server
+const serverProc = require('child_process').spawn(
+  getBinaryPath('webserver'),
+  [],
+  {
+    stdio: 'pipe',
+    env: {
+      ...process.env,
+      PORT: '4242'
+    }
+  }
+);
+
+serverProc.stdout.on('data', (data) => console.log(data.toString()));
+serverProc.stderr.on('data', (data) => console.error(data.toString()));
 
 function createWindow(): void {
   // Create the browser window.
@@ -83,6 +99,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('will-quit', () => {
+  serverProc.kill();
 });
 
 // In this file you can include the rest of your app's specific main process
